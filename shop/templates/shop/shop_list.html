@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}交大优铺{% endblock %}
+
+{% block 'nav_shop_active' %}active{% endblock %}
+
+{% load staticfiles %}
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'shop/shop.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">{% block shop_list_title %}店铺列表{% endblock %}</div>
+                    <div class="panel-body">
+                         {% for shop in shops %}
+                            <div class="shop">
+                                <h3><a href="{% url 'shop_detail' shop.pk %}">{{ shop.name }}</a></h3>
+                                <p class="shop-info">
+                                    <span class="glyphicon glyphicon-tag"></span> <a href="{% url 'shop_with_type' shop.shop_type.pk %}">{{ shop.shop_type }}</a>
+                                    阅读({{ shop.get_read_num }})
+                                </p>
+                                <p>{{ shop.content|truncatechars:50|linebreaksbr }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="paginator">
+                    <ul class="pagination">
+                        <li>
+                            {% if page_of_shops.has_previous %}
+                                <a href="?page={{ page_of_shops.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            {% else %}
+                                <span aria-hidden="true">&laquo;</span>
+                            {% endif %}
+                        </li>
+
+                        {% for page_num in page_range %}
+                            {% if page_num == page_of_shops.number %}
+                                <li class="active"><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                            {% else %}
+                                <li><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <li>
+                            {% if page_of_shops.has_next %}
+                                <a href="?page={{ page_of_shops.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            {% else %}
+                                <span aria-hidden="true">&raquo;</span>
+                            {% endif %}
+                        </li>
+                    </ul>
+                    <p>
+                        共有{{ page_of_shops.paginator.count }}个店铺
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <div class="panel panel-default">
+                  <div class="panel-heading">店铺分类</div>
+                  <div class="panel-body">
+                    <ul class="shop-types">
+                        {% for shop_type in shop_types %}
+                            <li><a href="{% url 'shop_with_type' shop_type.pk %}">{{ shop_type.type_name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

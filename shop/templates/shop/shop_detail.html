@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ shop.name }}
+{% endblock %}
+
+{% block 'nav_shop_active' %}active{% endblock %}
+
+{% load staticfiles %}
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'shop/shop.css' %}">
+{% endblock %}
+
+{% block content %}
+    {% load staticfiles %}
+    <div>
+        <img name="shop_photo" src="{% static 'images/lib.jpg' %}" class="img-circle" width="270" id="s_photo" >
+    </div>
+    <div class="container">
+        <div class="row">  
+            <div class="col-xs-10 col-xs-offset-1">
+                <h3>{{ shop.name }}</h3>
+                <ul class="shop-info-description">
+                    <li>分类： 
+                        <a href="{% url 'shop_with_type' shop.shop_type.pk %}">
+                            {{ shop.shop_type }}
+                        </a>
+                    </li>
+                    <li>阅读({{ shop.get_read_num }})</li>
+                </ul>   
+                <div class="shop-content">{{ shop.content|linebreaksbr }}</div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %} 
